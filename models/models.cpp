@@ -13,14 +13,14 @@ std::string Model::pose_predictor_five_point_model_location()
 		.string();
 }
 
-std::string face_recognition_model_location()
+std::string Model::face_recognition_model_location()
 {
 	return (std::filesystem::path(__FILE__).parent_path() / "model_assets" /
 			"/mode_assets/dlib_face_recognition_resnet_model_v1.dat")
 		.string();
 }
 
-std::string cnn_face_detector_model_location()
+std::string Model::cnn_face_detector_model_location()
 {
 	return (std::filesystem::path(__FILE__).parent_path() / "model_assets" /
 			"/mode_assets/mmod_human_face_detector.dat")

@@ -7,9 +7,9 @@
 class Model
 {
   public:
-	std::string pose_predictor_model_location();
-	std::string pose_predictor_five_point_model_location();
-	std::string face_recognition_model_location();
-	std::string cnn_face_detector_model_location();
+	static std::string pose_predictor_model_location();
+	static std::string pose_predictor_five_point_model_location();
+	static std::string face_recognition_model_location();
+	static std::string cnn_face_detector_model_location();
 };
 #endif
