@@ -9,9 +9,4 @@
 using namespace dlib;
 using namespace std;
 
-int main(int argc, char **argv)
-{
-	Models m = Models();
-	m.pose_predictor_model_location();
-	return 0;
-}
+int main(int argc, char **argv) { return 0; }

@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
-class Models
+class Model
 {
   public:
 	std::string pose_predictor_model_location();
