@@ -1,0 +1,18 @@
+cmake_minimum_required(VERSION 3.12)
+set(CMAKE_C_COMPILER "clang")
+set(CMAKE_CXX_COMPILER "clang++")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(SOURCES main.cpp)
+project(face_attendance)
+find_package(Boost REQUIRED)
+add_subdirectory(models)
+add_subdirectory(deps)
+set(DEPENDENCIES dlib)
+add_executable(${PROJECT_NAME} ${SOURCES})
+include_directories(${Boost_INCLUDE_DIRS})
+add_dependencies(${PROJECT_NAME} ${DEPENDENCIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ModelsLibrary )
+target_link_libraries(${PROJECT_NAME} PUBLIC ${DEPENDENCIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${BOOST_LIBRARIES})
+
+
