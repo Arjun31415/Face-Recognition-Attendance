@@ -17,14 +17,15 @@ FaceRecognition::_raw_face_locations(dlib::matrix<dlib::rgb_pixel> &img,
 {
 	std::vector<dlib::rectangle> face_locations;
 
-	if (model == "cnn")
+	/* if (model == "cnn")
 	{
 		return cnn_face_detector(img, number_of_times_to_upsample);
 	}
 	else
 	{
 		return face_detector(img, number_of_times_to_upsample);
-	}
+	} */
+	return face_locations;
 }
 std::vector<std::unordered_map<std::string, std::vector<dlib::point>>>
 face_landmarks(dlib::matrix<dlib::rgb_pixel> &img,
