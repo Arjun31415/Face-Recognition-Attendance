@@ -1,11 +1,14 @@
 #pragma once
-#include "models.hpp"
+#include <dlib/clustering.h>
 #include <dlib/dnn.h>
 #include <dlib/gui_widgets.h>
 #include <dlib/image_io.h>
 #include <dlib/image_processing/frontal_face_detector.h>
 #include <dlib/image_processing/shape_predictor.h>
 #include <dlib/string.h>
+
+#include "models.hpp"
+
 using namespace dlib;
 template <long num_filters, typename SUBNET>
 using con5d = con<num_filters, 5, 5, 2, 2, SUBNET>;
@@ -22,6 +25,7 @@ using net_type = loss_mmod<
 	con<1, 9, 9, 1, 1,
 		rcon5<rcon5<
 			rcon5<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+
 template <template <int, template <typename> class, int, typename> class block,
 		  int N, template <typename> class BN, typename SUBNET>
 using residual = add_prev1<block<N, BN, 1, tag1<SUBNET>>>;
@@ -61,7 +65,6 @@ class FaceRecognition
 {
 	static inline const dlib::frontal_face_detector face_detector =
 		dlib::get_frontal_face_detector();
-
 	static inline std::string predictor_68_point_model =
 		Model::pose_predictor_model_location();
 	static inline std::string predictor_5_point_model =
@@ -71,10 +74,10 @@ class FaceRecognition
 	static inline std::string face_recognition_model =
 		Model::face_recognition_model_location();
 
-	static dlib::shape_predictor pose_predictor_68_point;
-	static dlib::shape_predictor pose_predictor_5_point;
-	static net_type cnn_face_detector;
-	static anet_type face_encoder;
+	dlib::shape_predictor pose_predictor_68_point;
+	dlib::shape_predictor pose_predictor_5_point;
+	net_type cnn_face_detector;
+	anet_type face_encoder;
 	static std::tuple<long, long, long, long> _rect_to_css(dlib::rectangle rect)
 	{
 		return std::make_tuple(rect.top(), rect.right(), rect.bottom(),
@@ -90,15 +93,16 @@ class FaceRecognition
 						dlib::matrix<dlib::rgb_pixel> &img);
 
   public:
-	static void init()
+	FaceRecognition(void)
 	{
+        std::cout<<predictor_5_point_model<<"\n";
 		dlib::deserialize(predictor_68_point_model) >> pose_predictor_68_point;
 		dlib::deserialize(predictor_5_point_model) >> pose_predictor_5_point;
 		dlib::deserialize(cnn_face_detection_model) >> cnn_face_detector;
 		dlib::deserialize(face_recognition_model) >> face_encoder;
+		return;
 	}
-	std::vector<dlib::rectangle>
+	std::vector<dlib::mmod_rect>
 	_raw_face_locations(dlib::matrix<dlib::rgb_pixel> &img,
-						int number_of_times_to_upsample = 1,
-						std::string model = "hog");
+						std::pair<int, int> res, std::string model = "cnn");
 };
