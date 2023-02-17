@@ -40,9 +40,6 @@ try
 	}
 	FaceRecognition recognizer = FaceRecognition();
 
-	// net_type net;
-	// deserialize(argv[1]) >> net;
-
 	image_window win;
 	for (int i = 1; i < argc; ++i)
 	{
