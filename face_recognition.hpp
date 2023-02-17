@@ -95,7 +95,7 @@ class FaceRecognition
   public:
 	FaceRecognition(void)
 	{
-        std::cout<<predictor_5_point_model<<"\n";
+		std::cout << predictor_5_point_model << "\n";
 		dlib::deserialize(predictor_68_point_model) >> pose_predictor_68_point;
 		dlib::deserialize(predictor_5_point_model) >> pose_predictor_5_point;
 		dlib::deserialize(cnn_face_detection_model) >> cnn_face_detector;
@@ -105,4 +105,7 @@ class FaceRecognition
 	std::vector<dlib::mmod_rect>
 	_raw_face_locations(dlib::matrix<dlib::rgb_pixel> &img,
 						std::pair<int, int> res, std::string model = "cnn");
+	void recognize_faces(std::vector<dlib::mmod_rect> &faces);
+	void _get_image_files_in_directory(std::filesystem::path &known_folder,
+									  std::vector<std::string> &image_files);
 };

@@ -13,7 +13,4 @@ foreach(SUBDIR ${DEPS_SUBDIRS})
   endif()
 endforeach()
 
-# set the compiler to clang for dlib
 add_subdirectory(${DEPS_DIR}/dlib)
-# set(CMAKE_C_COMPILER "")
-# set(CMAKE_CXX_COMPILER "")
