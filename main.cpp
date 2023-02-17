@@ -5,7 +5,6 @@
 #include <dlib/gui_widgets.h>
 #include <dlib/image_processing.h>
 #include <iostream>
-using namespace dlib;
 template <long num_filters, typename SUBNET>
 using con5d = con<num_filters, 5, 5, 2, 2, SUBNET>;
 template <long num_filters, typename SUBNET>
@@ -46,10 +45,10 @@ try
 	image_window win;
 	for (int i = 1; i < argc; ++i)
 	{
-		matrix<rgb_pixel> img;
+		dlib::matrix<dlib::rgb_pixel> img;
 		load_image(img, argv[i]);
-
-		auto dets = recognizer._raw_face_locations(img, {1800, 1800});
+		std::vector<mmod_rect> dets;
+		recognizer._raw_face_locations(img, {1800, 1800}, dets);
 		win.clear_overlay();
 		win.set_image(img);
 		for (auto &&d : dets)

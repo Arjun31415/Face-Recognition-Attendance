@@ -102,10 +102,19 @@ class FaceRecognition
 		dlib::deserialize(face_recognition_model) >> face_encoder;
 		return;
 	}
-	std::vector<dlib::mmod_rect>
-	_raw_face_locations(dlib::matrix<dlib::rgb_pixel> &img,
-						std::pair<int, int> res, std::string model = "cnn");
+	void _raw_face_locations(dlib::matrix<dlib::rgb_pixel> &img,
+							 std::pair<int, int> res,
+							 std::vector<dlib::mmod_rect> &,
+							 std::string model = "cnn");
+	void _batched_raw_face_locations(
+		std::vector<dlib::matrix<dlib::rgb_pixel>> &img,
+		std::pair<int, int> res,
+		std::vector<std::vector<dlib::mmod_rect>> &face_locations,
+		std::string model);
 	void recognize_faces(std::vector<dlib::mmod_rect> &faces);
-	void _get_image_files_in_directory(std::filesystem::path &known_folder,
-									  std::vector<std::string> &image_files);
+	void _get_image_files_in_directory(
+		const std::filesystem::path &known_folder,
+		std::vector<std::pair<std::string, std::string>> &);
+	void scan_known_people(const std::filesystem::path &known_folder,
+						   const std::pair<int, int> &res);
 };
