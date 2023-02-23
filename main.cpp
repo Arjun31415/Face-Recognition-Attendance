@@ -1,3 +1,4 @@
+#include "dlib/gui_widgets/widgets.h"
 #include "face_recognition.hpp"
 #include "models/models.hpp"
 #include <dlib/data_io.h>
@@ -24,7 +25,7 @@ using net_type = loss_mmod<
 int main(int argc, char **argv)
 try
 {
-	if (argc == 1)
+	if (argc < 3)
 	{
 		std::cout << "Call this program like this:"
 				  << "\n";
@@ -42,7 +43,7 @@ try
 	// net_type net;
 	// deserialize(argv[1]) >> net;
 
-	image_window win;
+	/* image_window win;
 	for (int i = 1; i < argc; ++i)
 	{
 		dlib::matrix<dlib::rgb_pixel> img;
@@ -57,7 +58,24 @@ try
 		std::cout << "Hit enter to process the next image."
 				  << "\n";
 		std::cin.get();
-	}
+	} */
+	recognizer.scan_known_people(std::filesystem::path(argv[1]), {1800, 1800});
+	dlib::matrix<dlib::rgb_pixel> img;
+	load_image(img, argv[2]);
+std:;
+	std::vector<mmod_rect> dets;
+	recognizer._raw_face_locations(img, {1800, 1800}, dets);
+	std::vector<mmod_rect> overlays;
+	std::vector<std::string> names;
+	recognizer.recognize_faces(img, dets, overlays, names);
+	image_window win;
+	win.clear_overlay();
+	win.set_image(img);
+	for (size_t i = 0; i < overlays.size(); ++i)
+		win.add_overlay(dlib::image_window::overlay_rect(
+			overlays[i], rgb_pixel(255, 0, 0), names[i]));
+	std::cout << "Hit enter\n";
+	std::cin.get();
 }
 catch (std::exception &e)
 {

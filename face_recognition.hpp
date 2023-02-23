@@ -78,6 +78,8 @@ class FaceRecognition
 	dlib::shape_predictor pose_predictor_5_point;
 	net_type cnn_face_detector;
 	anet_type face_encoder;
+	std::vector<matrix<float, 0, 1>> known_face_descriptors;
+	std::vector<std::string> known_face_names;
 	static std::tuple<long, long, long, long> _rect_to_css(dlib::rectangle rect)
 	{
 		return std::make_tuple(rect.top(), rect.right(), rect.bottom(),
@@ -111,7 +113,9 @@ class FaceRecognition
 		std::pair<int, int> res,
 		std::vector<std::vector<dlib::mmod_rect>> &face_locations,
 		std::string model);
-	void recognize_faces(std::vector<dlib::mmod_rect> &faces);
+	void recognize_faces(matrix<rgb_pixel> &img,
+						 std::vector<dlib::mmod_rect> &faces,
+						 std::vector<dlib::mmod_rect> &overlay,std::vector<std::string>& names);
 	void _get_image_files_in_directory(
 		const std::filesystem::path &known_folder,
 		std::vector<std::pair<std::string, std::string>> &);

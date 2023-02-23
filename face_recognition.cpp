@@ -51,7 +51,7 @@ void FaceRecognition::_batched_raw_face_locations(
 		for (auto &img : imgs)
 			while (img.size() < res.first * res.second)
 				pyramid_up(img);
-
+	std::cout << "Image size: " << imgs.size() << std::endl;
 	if (model == "cnn")
 	{
 		// Note that you can process a bunch of images in a std::vector at once
@@ -62,6 +62,7 @@ void FaceRecognition::_batched_raw_face_locations(
 		// individually in this example.
 
 		face_locations = cnn_face_detector(imgs);
+		std::cout << face_locations.size() << std::endl;
 	}
 	else
 	{
@@ -70,16 +71,79 @@ void FaceRecognition::_batched_raw_face_locations(
 	}
 }
 // TODO: fix this function, it is currentl wrong
-void FaceRecognition::recognize_faces(std::vector<dlib::mmod_rect> &faces)
+void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
+									  std::vector<dlib::mmod_rect> &faces,
+									  std::vector<dlib::mmod_rect> &overlay,
+									  std::vector<std::string> &names)
 {
-	std::vector<matrix<float, 0, 1>> face_descriptors = face_encoder(faces);
 	if (faces.size() == 0)
 	{
 		printf("No faces found.\n");
 		return;
 	}
+	while (img.size() < 1800 * 1800)
+		pyramid_up(img);
 	std::vector<sample_pair> edges;
-	for (size_t i = 0; i < face_descriptors.size(); ++i)
+	std::cout << "Faces to recognize: " << faces.size() << std::endl;
+	std::vector<matrix<rgb_pixel>> shape_normalized_faces;
+	for (size_t i = 0; i < faces.size(); i++)
+	{
+		auto detected_face = faces[i];
+		/* if (detected_face.size() == 0)
+		{
+			printf("No faces found.\n");
+			continue;
+		}
+		else if (detected_face.size() > 1)
+		{
+			printf(
+				"More than one face found. Considering only the first face.\n");
+			continue;
+		} */
+		// Refer: http://dlib.net/dnn_face_recognition_ex.cpp.html
+		dlib::matrix<dlib::rgb_pixel> face_img = img;
+		auto shape = pose_predictor_5_point(face_img, detected_face);
+		matrix<rgb_pixel> face_chip;
+		extract_image_chip(face_img, get_face_chip_details(shape, 150, 0.25),
+						   face_chip);
+		shape_normalized_faces.push_back(std::move(face_chip));
+		assert(shape_normalized_faces.size() == image_files.size());
+	}
+	std::vector<matrix<float, 0, 1>> face_descriptors =
+		face_encoder(shape_normalized_faces);
+	std::vector<matrix<float, 0, 1>> unknown_face_descriptors =
+		face_encoder(shape_normalized_faces);
+
+	for (size_t i = 0; i < unknown_face_descriptors.size(); ++i)
+	{
+		size_t recognised_person_idx = this->known_face_descriptors.size();
+		float min_len = std::numeric_limits<float>::max();
+		for (size_t j = 0; j < this->known_face_descriptors.size(); j++)
+		{
+			auto temp =
+				length(unknown_face_descriptors[i] - known_face_descriptors[j]);
+			std::cout << temp << "\n";
+
+			if (temp < min_len && temp < 0.6)
+			{
+				min_len = temp;
+				recognised_person_idx = j;
+			}
+		}
+		if (recognised_person_idx < this->known_face_descriptors.size())
+		{
+			overlay.push_back(faces[i]);
+			names.push_back(
+				this->known_face_names[recognised_person_idx]);
+			std::cout << "Dude Recognised ";
+			std::cout << recognised_person_idx << " ";
+			std::cout << "Must be "
+					  << this->known_face_names[recognised_person_idx]
+					  << std::endl;
+		}
+		else std::cout << "Who dis guy?!\n";
+	}
+	/* for (size_t i = 0; i < face_descriptors.size(); ++i)
 	{
 		for (size_t j = i; j < face_descriptors.size(); ++j)
 		{
@@ -96,7 +160,7 @@ void FaceRecognition::recognize_faces(std::vector<dlib::mmod_rect> &faces)
 	const auto num_clusters = chinese_whispers(edges, labels);
 	// This will correctly indicate that there are 4 people in the image.
 	std::cout << "number of people found in the image: " << num_clusters
-			  << std::endl;
+			  << std::endl; */
 }
 void FaceRecognition::scan_known_people(
 	const std::filesystem::path &known_folder, const std::pair<int, int> &res)
@@ -113,6 +177,7 @@ void FaceRecognition::scan_known_people(
 	}
 	std::vector<std::vector<dlib::mmod_rect>> detected_faces;
 	_batched_raw_face_locations(faces, res, detected_faces, "cnn");
+	std::cout << detected_faces.size() << std::endl;
 	std::vector<matrix<rgb_pixel>> shape_normalized_faces;
 	for (size_t i = 0; i < detected_faces.size(); i++)
 	{
@@ -135,9 +200,20 @@ void FaceRecognition::scan_known_people(
 		extract_image_chip(face_img, get_face_chip_details(shape, 150, 0.25),
 						   face_chip);
 		shape_normalized_faces.push_back(std::move(face_chip));
+		assert(shape_normalized_faces.size() == image_files.size());
 	}
-	std::vector<matrix<float, 0, 1>> face_descriptors =
-		face_encoder(shape_normalized_faces);
+	for (size_t i = 0; i < shape_normalized_faces.size(); i++)
+	{
+		printf("Dude: %s\n", image_files[i].second.c_str());
+		std::cout << shape_normalized_faces[i].size() << "\n";
+	}
+	this->known_face_descriptors = face_encoder(shape_normalized_faces);
+	for (auto it = std::make_move_iterator(image_files.begin()),
+			  end = std::make_move_iterator(image_files.end());
+		 it != end; ++it)
+	{
+		this->known_face_names.push_back(std::move(it->second));
+	}
 }
 void FaceRecognition::_get_image_files_in_directory(
 	const std::filesystem::path &known_folder,
@@ -151,8 +227,9 @@ void FaceRecognition::_get_image_files_in_directory(
 		{
 			std::string file_extension = file.path().extension().string();
 			std::string basename = file.path().filename();
+			// std::cout << basename << " " << file_extension << "\n";
 			if (std::find(image_extensions.begin(), image_extensions.end(),
-						  file_extension) == image_extensions.end())
+						  file_extension) != image_extensions.end())
 			{
 				std::cout << file.path().string() << std::endl;
 				image_files.push_back({file.path().string(), basename});
