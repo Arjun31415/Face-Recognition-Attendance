@@ -133,8 +133,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 		if (recognised_person_idx < this->known_face_descriptors.size())
 		{
 			overlay.push_back(faces[i]);
-			names.push_back(
-				this->known_face_names[recognised_person_idx]);
+			names.push_back(this->known_face_names[recognised_person_idx]);
 			std::cout << "Dude Recognised ";
 			std::cout << recognised_person_idx << " ";
 			std::cout << "Must be "
@@ -143,24 +142,6 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 		}
 		else std::cout << "Who dis guy?!\n";
 	}
-	/* for (size_t i = 0; i < face_descriptors.size(); ++i)
-	{
-		for (size_t j = i; j < face_descriptors.size(); ++j)
-		{
-			// Faces are connected in the graph if they are close enough.  Here
-			// we check if the distance between two face descriptors is less
-			// than 0.6, which is the decision threshold the network was trained
-			// to use.  Although you can certainly use any other threshold you
-			// find useful.
-			if (length(face_descriptors[i] - face_descriptors[j]) < 0.6)
-				edges.push_back(sample_pair(i, j));
-		}
-	}
-	std::vector<unsigned long> labels;
-	const auto num_clusters = chinese_whispers(edges, labels);
-	// This will correctly indicate that there are 4 people in the image.
-	std::cout << "number of people found in the image: " << num_clusters
-			  << std::endl; */
 }
 void FaceRecognition::scan_known_people(
 	const std::filesystem::path &known_folder, const std::pair<int, int> &res)

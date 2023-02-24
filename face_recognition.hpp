@@ -115,7 +115,8 @@ class FaceRecognition
 		std::string model);
 	void recognize_faces(matrix<rgb_pixel> &img,
 						 std::vector<dlib::mmod_rect> &faces,
-						 std::vector<dlib::mmod_rect> &overlay,std::vector<std::string>& names);
+						 std::vector<dlib::mmod_rect> &overlay,
+						 std::vector<std::string> &names);
 	void _get_image_files_in_directory(
 		const std::filesystem::path &known_folder,
 		std::vector<std::pair<std::string, std::string>> &);

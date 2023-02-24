@@ -40,29 +40,9 @@ try
 	}
 	FaceRecognition recognizer = FaceRecognition();
 
-	// net_type net;
-	// deserialize(argv[1]) >> net;
-
-	/* image_window win;
-	for (int i = 1; i < argc; ++i)
-	{
-		dlib::matrix<dlib::rgb_pixel> img;
-		load_image(img, argv[i]);
-		std::vector<mmod_rect> dets;
-		recognizer._raw_face_locations(img, {1800, 1800}, dets);
-		win.clear_overlay();
-		win.set_image(img);
-		for (auto &&d : dets)
-			win.add_overlay(d);
-
-		std::cout << "Hit enter to process the next image."
-				  << "\n";
-		std::cin.get();
-	} */
 	recognizer.scan_known_people(std::filesystem::path(argv[1]), {1800, 1800});
 	dlib::matrix<dlib::rgb_pixel> img;
 	load_image(img, argv[2]);
-std:;
 	std::vector<mmod_rect> dets;
 	recognizer._raw_face_locations(img, {1800, 1800}, dets);
 	std::vector<mmod_rect> overlays;
