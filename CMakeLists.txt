@@ -17,5 +17,3 @@ add_dependencies(${PROJECT_NAME} ${DEPENDENCIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ModelsLibrary )
 target_link_libraries(${PROJECT_NAME} PUBLIC ${DEPENDENCIES})
 target_link_libraries(${PROJECT_NAME} PUBLIC ${BOOST_LIBRARIES})
-
-
