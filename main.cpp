@@ -42,6 +42,13 @@ try
 	recognizer.scan_known_people(std::filesystem::path(argv[1]), {1800, 1800});
 	dlib::matrix<dlib::rgb_pixel> img;
 	load_image(img, argv[2]);
+	bool interactive = true;
+	if (argc == 4)
+	{
+
+		strncmp(argv[3], "--nointeractive", 13) == 0 ? interactive = false
+												   : interactive = true;
+	}
 	std::vector<mmod_rect> dets;
 	recognizer._raw_face_locations(img, {1800, 1800}, dets);
 	std::vector<mmod_rect> overlays;
@@ -53,8 +60,11 @@ try
 	for (size_t i = 0; i < overlays.size(); ++i)
 		win.add_overlay(dlib::image_window::overlay_rect(
 			overlays[i], rgb_pixel(255, 0, 0), names[i]));
-	std::cout << "Hit enter\n";
-	std::cin.get();
+	if (interactive)
+	{
+		std::cout << "Hit enter\n";
+		std::cin.get();
+	}
 }
 catch (std::exception &e)
 {
