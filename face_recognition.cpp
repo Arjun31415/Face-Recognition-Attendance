@@ -70,7 +70,6 @@ void FaceRecognition::_batched_raw_face_locations(
 		throw std::runtime_error("Unimplemented HOG model");
 	}
 }
-// TODO: fix this function, it is currentl wrong
 void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 									  std::vector<dlib::mmod_rect> &faces,
 									  std::vector<dlib::mmod_rect> &overlay,
@@ -124,7 +123,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 				length(unknown_face_descriptors[i] - known_face_descriptors[j]);
 			std::cout << temp << "\n";
 
-			if (temp < min_len && temp < 0.6)
+			if (temp < 0.6 && temp < min_len)
 			{
 				min_len = temp;
 				recognised_person_idx = j;
@@ -134,14 +133,19 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 		{
 			overlay.push_back(faces[i]);
 			names.push_back(this->known_face_names[recognised_person_idx]);
-			std::cout << "Dude Recognised ";
+			std::cout << "Person Recognised ";
 			std::cout << recognised_person_idx << " ";
 			std::cout << "Must be "
 					  << this->known_face_names[recognised_person_idx]
 					  << std::endl;
 		}
-		else std::cout << "Who dis guy?!\n";
+		else std::cout << "Unkown person\n";
 	}
+}
+void FaceRecognition::batched_recognize_faces(
+	vector<matrix<rgb_pixel>> &imgs, std::vector<dlib::mmod_rect> &faces,
+	std::vector<dlib::mmod_rect> &overlay, std::vector<std::string> &names)
+{
 }
 void FaceRecognition::scan_known_people(
 	const std::filesystem::path &known_folder, const std::pair<int, int> &res)

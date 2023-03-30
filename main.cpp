@@ -37,6 +37,7 @@ try
 				  << "\n";
 		return 0;
 	}
+
 	FaceRecognition recognizer = FaceRecognition();
 
 	recognizer.scan_known_people(std::filesystem::path(argv[1]), {1800, 1800});

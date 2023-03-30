@@ -117,6 +117,10 @@ class FaceRecognition
 						 std::vector<dlib::mmod_rect> &faces,
 						 std::vector<dlib::mmod_rect> &overlay,
 						 std::vector<std::string> &names);
+	void batched_recognize_faces(vector<matrix<rgb_pixel>> &imgs,
+								 std::vector<dlib::mmod_rect> &faces,
+								 std::vector<dlib::mmod_rect> &overlay,
+								 std::vector<std::string> &names);
 	void _get_image_files_in_directory(
 		const std::filesystem::path &known_folder,
 		std::vector<std::pair<std::string, std::string>> &);
