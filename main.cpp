@@ -40,7 +40,7 @@ try
 
 	FaceRecognition recognizer = FaceRecognition();
 
-	recognizer.scan_known_people(std::filesystem::path(argv[1]), {1800, 1800});
+	recognizer.scan_known_people(std::filesystem::path(argv[1]), {2000, 2000});
 	dlib::matrix<dlib::rgb_pixel> img;
 	load_image(img, argv[2]);
 	bool interactive = true;
@@ -51,7 +51,7 @@ try
 												   : interactive = true;
 	}
 	std::vector<mmod_rect> dets;
-	recognizer._raw_face_locations(img, {1800, 1800}, dets);
+	recognizer._raw_face_locations(img, {2000, 2000}, dets);
 	std::vector<mmod_rect> overlays;
 	std::vector<std::string> names;
 	recognizer.recognize_faces(img, dets, overlays, names);
