@@ -1,3 +1,6 @@
 [submodule "deps/dlib"]
 	path = deps/dlib
 	url = https://github.com/davisking/dlib
+[submodule "server/ejs-image-upload"]
+	path = server
+	url = https://github.com/KaushalBarhate/ejs-image-upload.git
