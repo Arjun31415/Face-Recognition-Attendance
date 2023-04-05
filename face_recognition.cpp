@@ -23,22 +23,14 @@ void FaceRecognition::_raw_face_locations(
 		while (img.size() < res.first * res.second)
 			pyramid_up(img);
 
-	if (model == "cnn")
-	{
-		// Note that you can process a bunch of images in a std::vector at once
-		// and it runs much faster, since this will form mini-batches of images
-		// and therefore get better parallelism out of your GPU hardware.
-		// However, all the images must be the same size.  To avoid this
-		// requirement on images being the same size we process them
-		// individually in this example.
+	// Note that you can process a bunch of images in a std::vector at once
+	// and it runs much faster, since this will form mini-batches of images
+	// and therefore get better parallelism out of your GPU hardware.
+	// However, all the images must be the same size.  To avoid this
+	// requirement on images being the same size we process them
+	// individually in this example.
 
-		face_locations = cnn_face_detector(img);
-	}
-	else
-	{
-		// TODO:  <14-02-23, Arjun>
-		throw std::runtime_error("Unimplemented HOG model");
-	}
+	face_locations = cnn_face_detector(img);
 }
 void FaceRecognition::_batched_raw_face_locations(
 	std::vector<dlib::matrix<dlib::rgb_pixel>> &imgs, std::pair<int, int> res,
@@ -51,24 +43,15 @@ void FaceRecognition::_batched_raw_face_locations(
 		for (auto &img : imgs)
 			while (img.size() < res.first * res.second)
 				pyramid_up(img);
-	std::cout << "Image size: " << imgs.size() << std::endl;
-	if (model == "cnn")
-	{
-		// Note that you can process a bunch of images in a std::vector at once
-		// and it runs much faster, since this will form mini-batches of images
-		// and therefore get better parallelism out of your GPU hardware.
-		// However, all the images must be the same size.  To avoid this
-		// requirement on images being the same size we process them
-		// individually in this example.
+	// std::cout << "Image size: " << imgs.size() << std::endl;
+	// Note that you can process a bunch of images in a std::vector at once
+	// and it runs much faster, since this will form mini-batches of images
+	// and therefore get better parallelism out of your GPU hardware.
+	// However, all the images must be the same size.  To avoid this
+	// requirement on images being the same size we process them
+	// individually in this example.
 
-		face_locations = cnn_face_detector(imgs);
-		std::cout << face_locations.size() << std::endl;
-	}
-	else
-	{
-		// TODO:  <14-02-23, Arjun>
-		throw std::runtime_error("Unimplemented HOG model");
-	}
+	face_locations = cnn_face_detector(imgs);
 }
 void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 									  std::vector<dlib::mmod_rect> &faces,
@@ -123,7 +106,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 				length(unknown_face_descriptors[i] - known_face_descriptors[j]);
 			std::cout << temp << "\n";
 
-			if (temp < 0.6 && temp < min_len)
+			if (temp < 0.55 && temp < min_len)
 			{
 				min_len = temp;
 				recognised_person_idx = j;
@@ -135,8 +118,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 			names.push_back(this->known_face_names[recognised_person_idx]);
 			std::cout << "Person Recognised ";
 			std::cout << recognised_person_idx << " ";
-			std::cout << "Must be "
-					  << this->known_face_names[recognised_person_idx]
+			std::cout << this->known_face_names[recognised_person_idx]
 					  << std::endl;
 		}
 		else std::cout << "Unkown person\n";
@@ -187,11 +169,11 @@ void FaceRecognition::scan_known_people(
 		shape_normalized_faces.push_back(std::move(face_chip));
 		assert(shape_normalized_faces.size() == image_files.size());
 	}
-	for (size_t i = 0; i < shape_normalized_faces.size(); i++)
+	/* for (size_t i = 0; i < shape_normalized_faces.size(); i++)
 	{
 		printf("Dude: %s\n", image_files[i].second.c_str());
 		std::cout << shape_normalized_faces[i].size() << "\n";
-	}
+	} */
 	this->known_face_descriptors = face_encoder(shape_normalized_faces);
 	for (auto it = std::make_move_iterator(image_files.begin()),
 			  end = std::make_move_iterator(image_files.end());
@@ -216,7 +198,7 @@ void FaceRecognition::_get_image_files_in_directory(
 			if (std::find(image_extensions.begin(), image_extensions.end(),
 						  file_extension) != image_extensions.end())
 			{
-				std::cout << file.path().string() << std::endl;
+				// std::cout << file.path().string() << std::endl;
 				image_files.push_back({file.path().string(), basename});
 			}
 		}

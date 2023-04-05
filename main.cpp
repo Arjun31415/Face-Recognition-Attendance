@@ -21,6 +21,7 @@ using net_type = loss_mmod<
 	con<1, 9, 9, 1, 1,
 		rcon5<rcon5<
 			rcon5<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
+std::pair<int, int> res = {2000, 2000};
 int main(int argc, char **argv)
 try
 {
@@ -40,7 +41,7 @@ try
 
 	FaceRecognition recognizer = FaceRecognition();
 
-	recognizer.scan_known_people(std::filesystem::path(argv[1]), {2000, 2000});
+	recognizer.scan_known_people(std::filesystem::path(argv[1]), res);
 	dlib::matrix<dlib::rgb_pixel> img;
 	load_image(img, argv[2]);
 	bool interactive = true;
@@ -48,10 +49,10 @@ try
 	{
 
 		strncmp(argv[3], "--nointeractive", 13) == 0 ? interactive = false
-												   : interactive = true;
+													 : interactive = true;
 	}
 	std::vector<mmod_rect> dets;
-	recognizer._raw_face_locations(img, {2000, 2000}, dets);
+	recognizer._raw_face_locations(img, res, dets);
 	std::vector<mmod_rect> overlays;
 	std::vector<std::string> names;
 	recognizer.recognize_faces(img, dets, overlays, names);
