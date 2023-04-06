@@ -206,11 +206,9 @@ void FaceRecognition::_get_image_files_in_directory(
 		{
 			std::string file_extension = file.path().extension().string();
 			std::string basename = file.path().filename();
-			// std::cout << basename << " " << file_extension << "\n";
 			if (std::find(image_extensions.begin(), image_extensions.end(),
 						  file_extension) != image_extensions.end())
 			{
-				// std::cout << file.path().string() << std::endl;
 				image_files.push_back({file.path().string(), basename});
 			}
 		}
