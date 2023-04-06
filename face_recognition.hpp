@@ -1,3 +1,10 @@
+/**
+ * @file face_recognition.hpp
+ * @brief class declaration and type specification for face detection, 
+ * recognition and database building
+ * @author Arjun31415
+ */
+
 #pragma once
 #include <dlib/clustering.h>
 #include <dlib/dnn.h>

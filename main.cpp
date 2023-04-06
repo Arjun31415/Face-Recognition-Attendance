@@ -1,3 +1,9 @@
+/**
+ * @file main.cpp
+ * @brief the main driver code for smart attendance system
+ * @author Arjun31415
+ */
+
 #include "dlib/gui_widgets/widgets.h"
 #include "face_recognition.hpp"
 #include "models/models.hpp"

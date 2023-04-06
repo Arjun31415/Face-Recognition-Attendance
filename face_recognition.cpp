@@ -1,3 +1,9 @@
+/**
+ * @file face_recognition.cpp
+ * @author Arjun31415
+ * @brief class definition for FaceRecognition
+ */
+
 #include "dlib/image_processing/full_object_detection.h"
 #include "face_recognition.hpp"
 #include <filesystem>
