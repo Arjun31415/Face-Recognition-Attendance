@@ -21,7 +21,7 @@ using net_type = loss_mmod<
 	con<1, 9, 9, 1, 1,
 		rcon5<rcon5<
 			rcon5<downsampler<input_rgb_image_pyramid<pyramid_down<6>>>>>>>>;
-std::pair<int, int> res = {2000, 2000};
+std::pair<int, int> res = {1700,1700};
 int main(int argc, char **argv)
 try
 {
