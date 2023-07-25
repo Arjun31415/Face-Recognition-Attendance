@@ -36,4 +36,4 @@ build/
 compile_commands.json
 temp/
 profile/
-result/
+result
