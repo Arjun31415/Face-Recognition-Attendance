@@ -6,6 +6,9 @@
   cmake,
   pkgs,
   cudatoolkit,
+  cudaPackages,
+  cudaPackages_12_0,
+  pkgconfig,
   static ? false,
 }: let
   stdenv = pkgs.clangStdenv;
@@ -18,7 +21,7 @@ in
     src = ./.;
 
     nativeBuildInputs = [cmake];
-    buildInputs = [boost libx11 cudatoolkit];
+    buildInputs = [boost libx11 cudaPackages.cudatoolkit cudaPackages.cudnn pkgconfig];
 
     /*
        cmakeFlags = [
