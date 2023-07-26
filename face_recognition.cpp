@@ -75,7 +75,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 		printf("No faces found.\n");
 		return;
 	}
-	while (img.size() < 1800 * 1800)
+	while (img.size() < 1300 * 1300)
 		pyramid_up(img);
 	std::vector<sample_pair> edges;
 	std::cout << "Faces to recognize: " << faces.size() << std::endl;
@@ -107,7 +107,7 @@ void FaceRecognition::recognize_faces(matrix<rgb_pixel> &img,
 				length(unknown_face_descriptors[i] - known_face_descriptors[j]);
 			std::cout << temp << "\n";
 
-			if (temp < 0.55 && temp < min_len)
+			if (temp < 0.60 && temp < min_len)
 			{
 				min_len = temp;
 				recognised_person_idx = j;

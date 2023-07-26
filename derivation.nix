@@ -21,7 +21,7 @@ in
     src = ./.;
 
     nativeBuildInputs = [cmake];
-    buildInputs = [boost libx11 cudaPackages.cudatoolkit cudaPackages.cudnn pkgconfig];
+    buildInputs = [boost libx11 cudaPackages.cudatoolkit cudaPackages.cudnn pkgconfig pkgs.openblas];
 
     /*
        cmakeFlags = [
